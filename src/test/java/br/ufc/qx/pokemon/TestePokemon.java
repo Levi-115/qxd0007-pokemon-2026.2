@@ -39,4 +39,12 @@ public class TestePokemon {
 
     assertEquals(40, pikachu.getHp());
   }
+
+  @Test
+  public void getNomeEGetNivelRetornamValoresDoConstrutor() {
+    Pokemon pikachu = new Pokemon("Pikachu", 5);
+
+    assertEquals("Pikachu", pikachu.getNome());
+    assertEquals(5, pikachu.getNivel());
+  }
 }

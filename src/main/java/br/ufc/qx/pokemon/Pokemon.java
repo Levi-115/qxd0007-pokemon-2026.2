@@ -4,6 +4,7 @@ import java.util.Objects;
 
 public class Pokemon {
 
+  public static final int NIVEL_MAXIMO = 100;
   private static final int NIVEL_INICIAL = 1;
 
   private final String nome;
@@ -24,6 +25,14 @@ public class Pokemon {
 
   private static int calcularHpMax(int nivel) {
     return nivel * (25 + nivel);
+  }
+
+  public String getNome() {
+    return nome;
+  }
+
+  public int getNivel() {
+    return nivel;
   }
 
   public int getHp() {
