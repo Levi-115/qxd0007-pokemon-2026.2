@@ -129,7 +129,7 @@ Agora um teste pode fixar a semente e comparar textos:
 * Devolver uma `String` é mais simples de testar.
 * `renderizar` ficou sem modificador de acesso e `Mapa` foi movido para o subpacote `mapa`: só o pacote e seus testes o enxergam. A interface pública fica pequena, e o teste ainda chega ao método. O estágio 4 mostra quando essa fronteira deixa de valer a pena.
 
-### 3. Calculando o
+### 3. Calculando o HP máximo a partir do nível: `calcularHpMax`
 
 Como `hpMax` valia 0, qualquer vida positiva era descartada em silêncio: todo Pokémon nascia com `hp` igual a 0. O commit `7d4b8f3` remove o `hp` do construtor e deriva `hpMax` do nível:
 
@@ -449,6 +449,61 @@ Em `Mapa`, o tamanho estava guardado duas vezes: nos campos `altura` e `largura`
 * **Uma fonte de verdade para o tamanho do mapa.** Enquanto o tamanho existir em dois lugares, eles podem divergir. O teste usa um mapa **não quadrado** (10×5), onde uma troca entre altura e largura apareceria, e confere que toda célula foi preenchida.
 * **Ficou de fora, de propósito:** validar o nível ou as dimensões (o natural seria lançar uma exceção) e operações de HP como `receberDano`, `curar` e `estaDerrotado`. Elas ficam como exercício, abaixo.
 
+### 9. Criação isolada e sorteio controlável: `GeradorDePokemon`
+
+A próxima etapa do jogo é encontrar Pokémon selvagens na grama e tentar capturá-los com pokébolas. Para isso, alguém precisa *criar* o Pokémon selvagem, e a chance de captura depende do nível dele. O commit `0ab005e` (tag `v0.2.1`, ponto de partida da atividade 03) prepara esse terreno com uma classe só para a criação:
+
+`GeradorDePokemon.java` @ `0ab005e`
+```java
+  private static final String[] NOMES = {
+      "Pidgey", "Rattata", "Caterpie", "Weedle", "Oddish", "Bellsprout", "Pikachu", "Eevee"
+  };
+  private static final int NIVEL_MIN_SELVAGEM = 1;
+  private static final int NIVEL_MAX_SELVAGEM = 30;
+
+  private final Random random;
+
+  public GeradorDePokemon() {
+    this(new Random());
+  }
+
+  public GeradorDePokemon(Random random) {
+    this.random = random;
+  }
+
+  public Pokemon gerar() {
+    String nome = NOMES[random.nextInt(NOMES.length)];
+    int nivel = NIVEL_MIN_SELVAGEM + random.nextInt(NIVEL_MAX_SELVAGEM - NIVEL_MIN_SELVAGEM + 1);
+    return new Pokemon(nome, nivel);
+  }
+```
+
+`Pokemon.java` @ `0ab005e`
+```java
+  public static final int NIVEL_MAXIMO = 100;
+  private static final int NIVEL_INICIAL = 1;
+```
+
+`TesteGeradorDePokemon.java` @ `0ab005e`
+```java
+  @Test
+  public void geradoresComMesmaSementeGeramOsMesmosPokemons() {
+    GeradorDePokemon geradorA = new GeradorDePokemon(new Random(42));
+    GeradorDePokemon geradorB = new GeradorDePokemon(new Random(42));
+
+    for (int i = 0; i < 10; i++) {
+      assertEquals(geradorA.gerar(), geradorB.gerar());
+    }
+  }
+```
+
+**Por que essa decisão?**
+* **Uma classe própria, e não mais um método em `Jogo`.** A lista de nomes e a faixa de níveis são regras de criação que mudam por motivos próprios (um mapa novo, uma dificuldade diferente). Em `Jogo`, que já coordena mapa e treinador, elas seriam mais uma responsabilidade misturada. Com o gerador separado, mudar quais Pokémon aparecem não toca em `Jogo`.
+* **O mesmo padrão do `Random` do estágio 2.** O construtor sem argumentos cria um `new Random()` para o jogo; o que recebe o `Random` existe para o teste. Com um `new Random()` escondido dentro de `gerar()`, nenhum teste conseguiria prever o resultado. Repare que o teste compara Pokémon com `assertEquals`: funciona porque `Pokemon` define `equals` por nome e nível.
+* **Nível selvagem de 1 a 30, e não de 1 a `NIVEL_MAXIMO`.** A chance de captura cai com o nível e chega perto de 5% no nível 100, com qualquer pokébola comum. Com a faixa inteira, quase metade dos encontros seria quase impossível e a diferença entre as pokébolas desapareceria. Até o nível 30, a pokébola comum fica em torno de 33% a 45% e as melhores continuam visivelmente melhores.
+* **`NIVEL_MAXIMO` é `public`; `NIVEL_INICIAL` continua `private`.** As outras constantes do projeto são privadas porque só a própria classe as usa. O nível máximo é uma regra do domínio que a fórmula de captura, fora de `Pokemon`, vai consultar. Expor só o que alguém de fora precisa mantém a interface pequena.
+* **`getNome` e `getNivel` chegam junto com quem os lê.** O estágio 8 removeu campos que ninguém consultava; aqui o movimento é o inverso: os getters entram porque agora há leitores previstos (a mensagem "um Pidgey selvagem apareceu" e o cálculo da chance de captura). Um getter sem leitor seria só interface pública a mais para manter.
+
 ---
 
 ## 🛠️ Tecnologias Utilizadas
@@ -481,6 +536,7 @@ No jogo, digite `cima`, `baixo`, `esq` ou `dir` para mover o `T` e `sair` para e
 * Depois de ver `record`, reescreva `Posicao` como um `record` e confira que `TestePosicao` continua passando sem mudanças.
 * Escreva `receberDano`, `curar` e `estaDerrotado` em `Pokemon`. Decida o que fazer quando o dano passa do HP restante, e compare com o que `setHp` faz hoje quando o valor é inválido.
 * Depois de ver exceções, faça o construtor de `Mapa` recusar largura ou altura menor que 1, e o de `Pokemon`, um nível menor que 1. Escreva os testes primeiro.
+* Rode `TesteGeradorDePokemon` e troque a semente de um dos geradores. Explique por que o teste passa a falhar. Depois, imagine `gerar()` criando o próprio `Random`: ainda seria possível escrever esse teste?
 * Reflita: `JogoConsole` não tem testes. Que tipo de mudança faria você querer testá-la, e onde essa lógica deveria morar?
 
 ---
