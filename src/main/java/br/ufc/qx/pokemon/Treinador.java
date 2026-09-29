@@ -1,17 +1,17 @@
 package br.ufc.qx.pokemon;
 
-import br.ufc.qx.pokemon.mapa.Posicao;
-
 import java.util.Arrays;
 import java.util.List;
+
+import br.ufc.qx.pokemon.mapa.Posicao;
 
 public class Treinador {
 
   private static final int MAX_POKEMONS = 6;
 
-  private String nome;
+  private final String nome;
   private Posicao posicao;
-  private Pokemon[] pokemons;
+  private final Pokemon[] pokemons;
   private int qtdPokemons;
 
   public Treinador(String nome) {

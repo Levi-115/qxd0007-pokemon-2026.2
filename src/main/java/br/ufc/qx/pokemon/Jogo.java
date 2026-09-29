@@ -8,8 +8,8 @@ public class Jogo {
   private static final int LARGURA_MAPA = 10;
   private static final int ALTURA_MAPA = 5;
 
-  private Treinador treinador;
-  private Mapa mapa;
+  private final Treinador treinador;
+  private final Mapa mapa;
 
   public Jogo(String nome) {
     treinador = new Treinador(nome);
