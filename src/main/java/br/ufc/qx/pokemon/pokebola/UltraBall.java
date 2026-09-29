@@ -1,4 +1,4 @@
-package br.ufc.qx.pokemon;
+package br.ufc.qx.pokemon.pokebola;
 
 public class UltraBall extends Pokebola {
     public UltraBall() {

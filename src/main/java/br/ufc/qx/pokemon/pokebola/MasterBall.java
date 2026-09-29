@@ -1,4 +1,6 @@
-package br.ufc.qx.pokemon;
+package br.ufc.qx.pokemon.pokebola;
+
+import br.ufc.qx.pokemon.Pokemon;
 
 public class MasterBall extends Pokebola {
     public MasterBall() {

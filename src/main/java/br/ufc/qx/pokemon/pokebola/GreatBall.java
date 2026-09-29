@@ -1,4 +1,5 @@
-package br.ufc.qx.pokemon;
+package br.ufc.qx.pokemon.pokebola;
+
 
 public class GreatBall extends Pokebola {
     public GreatBall() {
