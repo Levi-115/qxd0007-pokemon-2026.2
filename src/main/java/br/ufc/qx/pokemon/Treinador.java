@@ -4,20 +4,25 @@ import java.util.Arrays;
 import java.util.List;
 
 import br.ufc.qx.pokemon.mapa.Posicao;
+import br.ufc.qx.pokemon.pokebola.Pokebola;
 
 public class Treinador {
-
+  
+  private static final int MAX_POKEBOLAS= 20;
   private static final int MAX_POKEMONS = 6;
 
   private final String nome;
   private Posicao posicao;
   private final Pokemon[] pokemons;
   private int qtdPokemons;
+  private final Pokebola[] pokebolas;
+  private int qtdPokebolas;
 
   public Treinador(String nome) {
     this.nome = nome;
     this.posicao = new Posicao(0, 0);
     this.pokemons = new Pokemon[MAX_POKEMONS];
+    this.pokebolas = new Pokebola[MAX_POKEBOLAS];
   }
 
   public String getNome() {
@@ -43,5 +48,35 @@ public class Treinador {
     }
     return false;
   }
-
+  public boolean adicionarPokebola(Pokebola pokebola) {
+    if (qtdPokebolas < MAX_POKEBOLAS) {
+      pokebolas[qtdPokebolas++] = pokebola;
+      return true;
+    }
+    return false;
+  }
+  public boolean temPokebolas(Pokebola pokebola) {
+    for (int i = 0; i < qtdPokebolas; i++) {
+      if (pokebolas[i].equals(pokebola)) {
+        return true;
+      }
+    }
+    return false;
+  }
+  public Pokebola arremessarPokebola(Pokebola pokebola) {
+    if (temPokebolas(pokebola)) {
+      for (int i = 0; i < qtdPokebolas; i++) {
+        if (pokebolas[i].equals(pokebola)) {
+          Pokebola arremessada = pokebolas[i];
+          // Remove a Pokebola do array
+          for (int j = i; j < qtdPokebolas - 1; j++) {
+            pokebolas[j] = pokebolas[j + 1];
+          }
+          pokebolas[--qtdPokebolas] = null;
+          return arremessada;
+        }
+      }
+    }
+    return null;
+  }
 }

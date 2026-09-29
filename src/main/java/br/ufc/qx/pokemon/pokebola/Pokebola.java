@@ -19,11 +19,9 @@ public class Pokebola {
         return nome;
     }
     public double getTaxaDeCaptura(Pokemon pokemon) {
-        return taxaBase-taxaBase*(pokemon.getNivel()/Pokemon.NIVEL_MAXIMO)+0.05;
+        return taxaBase-taxaBase*(pokemon.getNivel()*1.0/Pokemon.NIVEL_MAXIMO)+0.05;
     }
     public boolean capturar(Pokemon pokemon) {
-        double taxaDeCaptura = getTaxaDeCaptura(pokemon);
-        double chance = Math.random();
-        return chance <= taxaDeCaptura;
+        return Math.random() <= getTaxaDeCaptura(pokemon);
     }
 }

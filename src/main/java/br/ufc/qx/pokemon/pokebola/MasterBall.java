@@ -7,7 +7,7 @@ public class MasterBall extends Pokebola {
         super("Master Ball", 1.0);
     }
     @Override
-    public double getTaxaDeCaptura(Pokemon pokemon) {
-        return 1.0;
+    public boolean capturar(Pokemon pokemon) {
+        return true;
     }
 }
