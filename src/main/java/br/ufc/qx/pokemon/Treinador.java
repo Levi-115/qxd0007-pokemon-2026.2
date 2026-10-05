@@ -49,6 +49,9 @@ public class Treinador {
     return false;
   }
   public boolean adicionarPokebola(Pokebola pokebola) {
+    if (pokebola == null) {
+      return false;
+    }
     if (qtdPokebolas < MAX_POKEBOLAS) {
       pokebolas[qtdPokebolas++] = pokebola;
       return true;
@@ -56,6 +59,9 @@ public class Treinador {
     return false;
   }
   public boolean temPokebolas(Pokebola pokebola) {
+    if (pokebola == null) {
+      return false;
+    }
     for (int i = 0; i < qtdPokebolas; i++) {
       if (pokebolas[i].equals(pokebola)) {
         return true;
@@ -63,7 +69,9 @@ public class Treinador {
     }
     return false;
   }
+
   public Pokebola arremessarPokebola(Pokebola pokebola) {
+  
     if (temPokebolas(pokebola)) {
       for (int i = 0; i < qtdPokebolas; i++) {
         if (pokebolas[i].equals(pokebola)) {
