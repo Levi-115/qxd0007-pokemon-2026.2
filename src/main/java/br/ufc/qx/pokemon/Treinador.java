@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import br.ufc.qx.pokemon.mapa.Posicao;
-import br.ufc.qx.pokemon.pokebola.Pokebola;
 
 public class Treinador {
   
@@ -76,7 +75,6 @@ public class Treinador {
       for (int i = 0; i < qtdPokebolas; i++) {
         if (pokebolas[i].equals(pokebola)) {
           Pokebola arremessada = pokebolas[i];
-          // Remove a Pokebola do array
           for (int j = i; j < qtdPokebolas - 1; j++) {
             pokebolas[j] = pokebolas[j + 1];
           }

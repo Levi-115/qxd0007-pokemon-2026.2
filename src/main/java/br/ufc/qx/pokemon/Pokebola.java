@@ -1,6 +1,5 @@
-package br.ufc.qx.pokemon.pokebola;
+package br.ufc.qx.pokemon;
 
-import br.ufc.qx.pokemon.Pokemon;
 
 public class Pokebola {
     private final String nome;

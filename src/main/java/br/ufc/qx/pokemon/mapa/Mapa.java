@@ -54,6 +54,6 @@ public class Mapa {
         && posicao.getY() >= 0 && posicao.getY() < altura;
   }
   public boolean temPokemon(Posicao posicao) {
-    return ePosicaoValida(posicao) && this.mapa[posicao.getY()][posicao.getX()] == GRAMA && Math.random() < 0.5;
+    return ePosicaoValida(posicao) && this.mapa[posicao.getY()][posicao.getX()] == GRAMA && Math.random() <= 0.5;
   }
 }
